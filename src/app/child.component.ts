@@ -2,162 +2,100 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnChanges,
+  OnInit,
   Input,
   AfterViewChecked,
   AfterViewInit,
   AfterContentInit,
-  AfterContentChecked
+  AfterContentChecked,
+  ChangeDetectorRef
 } from "@angular/core";
 
 @Component({
   selector: "app-a",
   template: `
-    <p>a-{{ a }}</p>
+    <p>a-{{ a }} {{ i }}</p>
   `
 })
-export class AComponent {
+export class AComponent implements OnChanges {
+  @Input() i;
   a: number = 0;
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     let i = 0;
-    setInterval(() => {
-      this.a++;
-      console.log("a");
-    }, 5000);
+    cdr.detach();
   }
   onRender() {
     console.log("a");
+  }
+  ngOnChanges() {
+    console.log("change detection:A", this.i);
+    this.cdr.detectChanges();
   }
 }
 
 @Component({
   selector: "app-b",
   template: `
-    <p>b- {{ b }}</p>
+    <p>b- {{ b }} {{ i }}</p>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BComponent {
-  b: number = 0;
-  constructor() {
-    let i = 0;
-    setInterval(() => {
-      this.b++;
-      console.log("b");
-    }, 5000);
-  }
-  onRender() {}
-}
-
-@Component({
-  selector: "app-d",
-  template: `
-    {{ p }}
-    <app-e></app-e>
-    <app-f [p]="p"></app-f>
-    <button type="button" (click)="add()">add</button>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class DComponent
+export class BComponent
   implements
     OnChanges,
+    OnInit,
     AfterViewChecked,
     AfterViewInit,
     AfterContentInit,
     AfterContentChecked {
-  @Input() p = "dd";
+  @Input() i;
+  b: number = 0;
+  constructor(private cdr: ChangeDetectorRef) {}
+  onRender() {}
+
   ngOnChanges() {
-    console.log("hello changes");
+    console.log("change detection:B", this.i);
+    this.cdr.markForCheck();
   }
-  ngAfterViewChecked() {
-    console.log("AfterViewChecked");
-  }
-  ngAfterViewInit() {
-    console.log("ngAfterViewInit");
+
+  ngAfterContentInit() {
+    console.log("ngAfterContentInit");
   }
   ngAfterContentChecked() {
     console.log("ngAfterContentChecked");
   }
-  ngAfterContentInit() {
-    console.log("ngAfterContentInit");
-  }
-  add() {}
-}
-
-@Component({
-  selector: "app-e",
-  template: `
-    <div>eee</div>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class EComponent
-  implements
-    OnChanges,
-    AfterViewChecked,
-    AfterViewInit,
-    AfterContentInit,
-    AfterContentChecked {
-  ngOnChanges() {
-    console.log("E: hello changes");
-  }
   ngAfterViewChecked() {
-    console.log("E: AfterViewChecked");
+    console.log("ngAfterViewChecked");
+    this.cdr.detach();
   }
   ngAfterViewInit() {
-    console.log("E: ngAfterViewInit");
+    console.log("ngAfterViewInit");
   }
-  ngAfterContentChecked() {
-    console.log("E: ngAfterContentChecked");
-  }
-  ngAfterContentInit() {
-    console.log("E: ngAfterContentInit");
-  }
-}
-
-@Component({
-  selector: "app-f",
-  template: `
-    <div>fff: {{ p }}</div>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class FComponent
-  implements
-    OnChanges,
-    AfterViewChecked,
-    AfterViewInit,
-    AfterContentInit,
-    AfterContentChecked {
-  @Input() p = "p";
-  ngOnChanges() {
-    console.log("F: hello changes");
-  }
-  ngAfterViewChecked() {
-    console.log("F: AfterViewChecked");
-  }
-  ngAfterViewInit() {
-    console.log("F: ngAfterViewInit");
-  }
-  ngAfterContentChecked() {
-    console.log("F: ngAfterContentChecked");
-  }
-  ngAfterContentInit() {
-    console.log("F: ngAfterContentInit");
+  ngOnInit() {
+    console.log("ngOnInit");
   }
 }
 
 @Component({
   selector: "app-c",
   template: `
-    <p>c- {{ c }}</p>
+    <p>c- {{ c }} {{ i }}</p>
     <button type="button" (click)="add()">add</button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CComponent {
+export class CComponent implements OnChanges {
+  @Input() i;
   c: number = 0;
+  constructor(private cdr: ChangeDetectorRef) {
+    cdr.detach();
+  }
   add() {
     this.c++;
+  }
+
+  ngOnChanges() {
+    console.log("change detection:C", this.i);
+    this.cdr.markForCheck();
   }
 }

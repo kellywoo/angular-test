@@ -8,9 +8,6 @@ import {
   BComponent,
   AComponent,
   CComponent,
-  DComponent,
-  EComponent,
-  FComponent
 } from "./child.component";
 import { HelloComponent } from "./hello.component";
 
@@ -22,9 +19,6 @@ import { HelloComponent } from "./hello.component";
     BComponent,
     AComponent,
     CComponent,
-    DComponent,
-    EComponent,
-    FComponent
   ],
   bootstrap: [AppComponent]
 })

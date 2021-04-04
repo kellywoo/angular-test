@@ -1,4 +1,4 @@
-import { Component, VERSION } from '@angular/core';
+import { Component, NgZone, VERSION } from '@angular/core';
 
 @Component({
   selector: 'my-app',
@@ -7,4 +7,8 @@ import { Component, VERSION } from '@angular/core';
 })
 export class AppComponent  {
   name = 'Angular ' + VERSION.major;
+  i = 0;
+  constructor(private zone: NgZone){
+    setInterval(()=>this.i++, 2000);
+  }
 }
